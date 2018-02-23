@@ -1,0 +1,14 @@
+{
+  "name": "Camaleon Reservations API",
+  "description": "This will be the entire backend of the reservations application.",
+  "keywords": [
+    "camaleon-reservations-api",
+    "go",
+    "reservations",
+    "camaleon",
+    "graphql",
+    "api"
+  ],
+  "website": "http://github.com/restcontmx/camaleon-reservations-api",
+  "repository": "http://github.com/restcontmx/camaleon-reservations-api"
+}

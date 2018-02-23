@@ -1,0 +1,44 @@
+TODOS :
+
+1) All the models :
+
+   Business 	 Model ( X, X, X, X, X )
+   Location 	 Model ( X, X, X, X, X )
+   Area		 Model ( X, X, X, X, X )
+   Table         Model ( X, X, X, X, X )
+   Reservation	 Model ( X, X, X, X, X )
+   User          Model ( œôøº, œôøº, œôøº, œôøº, œôøº )
+
+2 ) Config Files :
+
+   Business 	 Config ( X, X, X, X, X )
+   Location	 Config ( X, X, X, X, X )
+   Area		 Config ( X, X, X, X, X )
+   Table	 Config ( X, X, X, X, X )
+   Reservation   Config ( X, X, X, X, X )
+   User          Config ( v, œôøº, v, œôøº, œôøº )
+
+3) Repository Files :
+
+   Business   	  Repository ( X, X, X, X, X )
+   Location	  Repository ( X, X, X, X, X )
+   Area		  Repository ( X, X, X, X, X )
+   Table	  Repository ( X, X, X, X, X )
+   Reservation    Repository ( X, X, X, X, X )
+   User		  Repository ( œôøº, œôøº, œôøº, v, œôøº )
+
+4) Graphql Routes :
+
+   Business 	  Routes ( X, X, X, X, X )
+   Location	  Routes ( X, X, X, X, X )
+   Area	    	  Routes ( X, X, X, X, X )
+   Table	  Routes ( X, X, X, X, X )
+   Reservation 	  Routes ( œôøº, X, X, X, X )
+   User        	  Routes ( œôøº, œôøº, œôøº, œôøº, œôøº )
+   
+   Routes Definition CheckList: 
+   	  GetAll
+	  GetByID
+	  Create
+	  Update
+	  Delete
