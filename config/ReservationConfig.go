@@ -67,11 +67,43 @@ var ReservationObject = graphql.NewObject(
 //
 var GetAllReservations = &graphql.Field{
 	Type: graphql.NewList(ReservationObject),
-	Args: graphql.FieldConfigArgument{},
+	Args: graphql.FieldConfigArgument{
+		"location": &graphql.ArgumentConfig{
+			Type: graphql.NewNonNull(graphql.Int),
+		},
+		"start_date": &graphql.ArgumentConfig{
+			Type: graphql.NewNonNull(graphql.DateTime),
+		},
+		"end_date": &graphql.ArgumentConfig{
+			Type: graphql.NewNonNull(graphql.DateTime),
+		},
+		"status_id": &graphql.ArgumentConfig{
+			Type: graphql.Int,
+		},
+	},
 	Resolve: func(p graphql.ResolveParams) (interface{}, error) {
 		isOk, _ := ValidateAuthentication(p.Context.Value(authKey).(string))
 		if isOk {
-			return ReservationConfig.Repository.GetAll()
+			layout := "01/02/2006 15:04:05"
+			if location, isOk := p.Args["location"].(int); isOk {
+				if startDate, isOk := p.Args["start_date"].(string); isOk {
+					if t1, err := time.Parse(layout, startDate); err == nil {
+						if endDate, isOk := p.Args["end_date"].(string); isOk {
+							if t2, err := time.Parse(layout, endDate); err == nil {
+								if statusID, isOk := p.Args["status_id"].(int); isOk {
+									return ReservationConfig.Repository.GetByDates(location, statusID, t1, t2)
+								}
+								return ReservationConfig.Repository.GetByDates(location, 0, t1, t2)
+							}
+							return nil, fmt.Errorf("Format for 'end_date' is 'mm/dd/yyyy hh:mm:ss'")
+						}
+						return nil, fmt.Errorf("You must provide a 'end_date' variable")
+					}
+					return nil, fmt.Errorf("Format for 'start date' is 'mm/dd/yyyy hh:mm:ss'")
+				}
+				return nil, fmt.Errorf("You must provide a 'start_date' variable")
+			}
+			return nil, fmt.Errorf("You must provide a 'location' variable")
 		}
 		return nil, fmt.Errorf("Invalid Credentials")
 	},
@@ -132,8 +164,13 @@ var CreateUpdateReservation = &graphql.Field{
 				if clientInfoID, isOk := p.Args["client_info_id"].(int); isOk {
 					ReservationConfig.Repository.Model.ClientInfo.ID = clientInfoID
 				}
-				if date, isOk := p.Args["date"].(time.Time); isOk {
-					ReservationConfig.Repository.Model.Date = date
+				if date, isOk := p.Args["date"].(string); isOk {
+					layout := "01/02/2006 15:04:05"
+					if t, err := time.Parse(layout, date); err == nil {
+						ReservationConfig.Repository.Model.Date = t
+					} else {
+						return nil, fmt.Errorf("Format for 'Date' is 'mm/dd/yyyy hh:mm:ss'")
+					}
 				}
 				return ReservationConfig.Repository.Update()
 			}

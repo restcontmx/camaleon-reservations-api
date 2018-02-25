@@ -38,9 +38,6 @@ var ClientInfoObject = graphql.NewObject(
 			"Phone": &graphql.Field{
 				Type: graphql.String,
 			},
-			"LocationID": &graphql.Field{
-				Type: graphql.Int,
-			},
 			"Timestamp": &graphql.Field{
 				Type: graphql.DateTime,
 			},
@@ -58,9 +55,6 @@ var CreateUpdateClientInfo = &graphql.Field{
 	Type: ClientInfoObject,
 	Args: graphql.FieldConfigArgument{
 		"id": &graphql.ArgumentConfig{
-			Type: graphql.Int,
-		},
-		"location": &graphql.ArgumentConfig{
 			Type: graphql.Int,
 		},
 		"firstname": &graphql.ArgumentConfig{
@@ -107,17 +101,13 @@ var CreateUpdateClientInfo = &graphql.Field{
 			}
 			if email, isOk := p.Args["email"].(string); isOk {
 				ClientInfoConfig.Repository.Model.Email = email
-				if phone, isOk := p.Args["phone"].(string); isOk {
-					ClientInfoConfig.Repository.Model.Phone = phone
-					if location, isOk := p.Args["location"].(int); isOk {
-						ClientInfoConfig.Repository.Model.LocationID = location
-						return ClientInfoConfig.Repository.Create()
-					}
-					return nil, fmt.Errorf("You must provide a Location ")
-				}
-				return nil, fmt.Errorf("You must provide a Phone ")
 			}
-			return nil, fmt.Errorf("You must provide an Email ")
+
+			if phone, isOk := p.Args["phone"].(string); isOk {
+				ClientInfoConfig.Repository.Model.Phone = phone
+				return ClientInfoConfig.Repository.Create()
+			}
+			return nil, fmt.Errorf("You must provide a Phone ")
 		}
 		return nil, fmt.Errorf("Invalid Credentials")
 	},
@@ -147,15 +137,20 @@ var RetrieveClientInfo = &graphql.Field{
 		"id": &graphql.ArgumentConfig{
 			Type: graphql.Int,
 		},
+		"phone": &graphql.ArgumentConfig{
+			Type: graphql.String,
+		},
 	},
 	Resolve: func(p graphql.ResolveParams) (interface{}, error) {
 		isOk, _ := ValidateAuthentication(p.Context.Value(authKey).(string))
 		if isOk {
-			id, isOk := p.Args["id"].(int)
-			if isOk {
+			if id, isOk := p.Args["id"].(int); isOk {
 				return ClientInfoConfig.Repository.GetByID(id)
 			}
-			return nil, fmt.Errorf("There is no id field")
+			if phone, isOk := p.Args["phone"].(string); isOk {
+				return ClientInfoConfig.Repository.GetByPhone(phone)
+			}
+			return nil, fmt.Errorf("There are no filters")
 		}
 		return nil, fmt.Errorf("Invalid Credentials")
 	},

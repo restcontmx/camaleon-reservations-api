@@ -3,6 +3,7 @@ package data
 import (
 	"database/sql"
 	"fmt"
+	"time"
 
 	"github.com/restcontmx/camaleon-reservations-api/app/models"
 )
@@ -314,4 +315,117 @@ func (r ReservationRepository) Delete() (bool, error) {
 	}
 
 	return true, nil
+}
+
+//
+// GetByDates will return the reservations location between two dates
+// @param location : integer - the location id
+// @param status_id : integer - the status id
+// @param startDate ; time - the start date
+// @param endDate : time - the end date
+//
+func (r ReservationRepository) GetByDates(location int, statusID int, startDate time.Time, endDate time.Time) ([]interface{}, error) {
+	var sqlStm = `
+				SELECT 	a.id, 
+						a.uid,
+						a.date,
+						a.time_limit,
+						a.guests,
+						a.timestamp, 
+						a.updated,
+						a.client_info_id,
+						b.first_name,
+						b.last_name,
+						b.email,
+						b.phone,
+						a.status,
+						c.description,
+						c.value,
+						a.table_id,
+						d.name,
+						d.description,
+						d.img_url,
+						d.max_guests,
+						d.area_id,
+						area.name,
+						area.description,
+						area.img_url,
+						a.location_id,
+						e.name
+				FROM 			reservations_reservation a
+					INNER JOIN 	reservations_client_info b ON a.client_info_id = b.id
+					INNER JOIN 	reservations_reservation_status c ON a.status = c.id
+					INNER JOIN 	reservations_table d ON a.table_id = d.id
+					INNER JOIN 	reservations_area area ON d.area_id = area.id
+					INNER JOIN 	reservations_location e ON a.location_id = e.id
+				WHERE 	a.location_id = $1
+					AND (SELECT CASE WHEN ( $2 <> 0 )
+							THEN ( a.status = $2 )
+							ELSE ( a.status > 0 ) END )
+					AND a.date BETWEEN $3 AND $4`
+
+	var objects []models.ReservationModel
+
+	rows, err := r.DB.Query(sqlStm, location, statusID, startDate, endDate)
+
+	if err != nil {
+		return nil, fmt.Errorf("%s", err)
+	}
+
+	defer rows.Close()
+
+	for rows.Next() {
+		reservation := models.ReservationModel{
+			ClientInfo: models.ClientInfoModel{},
+			Location:   models.LocationModel{},
+			Table: models.TableModel{
+				Area: models.AreaModel{},
+			},
+			Status: models.ReservationStatusModel{},
+		}
+
+		if err = rows.Scan(
+			&reservation.ID,
+			&reservation.UID,
+			&reservation.Date,
+			&reservation.TimeLimit,
+			&reservation.Guests,
+			&reservation.Timestamp,
+			&reservation.Updated,
+			&reservation.ClientInfo.ID,
+			&reservation.ClientInfo.FirstName,
+			&reservation.ClientInfo.LastName,
+			&reservation.ClientInfo.Email,
+			&reservation.ClientInfo.Phone,
+			&reservation.Status.ID,
+			&reservation.Status.Description,
+			&reservation.Status.Value,
+			&reservation.Table.ID,
+			&reservation.Table.Name,
+			&reservation.Table.Description,
+			&reservation.Table.ImgURL,
+			&reservation.Table.MaxGuests,
+			&reservation.Table.Area.ID,
+			&reservation.Table.Area.Name,
+			&reservation.Table.Area.Description,
+			&reservation.Table.Area.ImgURL,
+			&reservation.Location.ID,
+			&reservation.Location.Name); err != nil {
+			return nil, fmt.Errorf("%s", err)
+		}
+
+		objects = append(objects, reservation)
+	}
+
+	if err = rows.Err(); err != nil {
+		return nil, fmt.Errorf("%s", err)
+	}
+
+	intfObjects := make([]interface{}, len(objects))
+
+	for i, obj := range objects {
+		intfObjects[i] = obj
+	}
+
+	return intfObjects, nil
 }

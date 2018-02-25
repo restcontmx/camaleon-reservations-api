@@ -154,8 +154,8 @@ func (u UserRepository) Create() (interface{}, error) {
 		u.Model.FirstName,
 		u.Model.LastName,
 		u.Model.UserName,
-		u.Model.Email,
 		string(hash),
+		u.Model.Email,
 	); err != nil {
 		return nil, fmt.Errorf("%s", err)
 	}
@@ -198,8 +198,8 @@ func (u UserRepository) Update() (interface{}, error) {
 		u.Model.FirstName,
 		u.Model.LastName,
 		u.Model.UserName,
-		u.Model.Email,
 		u.Model.Password,
+		u.Model.Email,
 	); err != nil {
 		return nil, fmt.Errorf("%s", err)
 	}

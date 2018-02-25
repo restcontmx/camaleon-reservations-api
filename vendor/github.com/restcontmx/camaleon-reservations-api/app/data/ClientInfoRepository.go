@@ -29,7 +29,6 @@ func (c ClientInfoRepository) GetAll() ([]interface{}, error) {
 						a.email,
 						a.phone,
 						( SELECT CASE WHEN ( a.client_ref <> null ) THEN a.client_ref ELSE 0 END),
-						a.location_id,
 						a.timestamp, 
 						a.updated 
 					FROM reservations_client_info a
@@ -51,7 +50,6 @@ func (c ClientInfoRepository) GetAll() ([]interface{}, error) {
 		var email string
 		var phone string
 		var clientref int
-		var locationID int
 		var timestamp time.Time
 		var updated time.Time
 
@@ -61,21 +59,19 @@ func (c ClientInfoRepository) GetAll() ([]interface{}, error) {
 			&email,
 			&phone,
 			&clientref,
-			&locationID,
 			&timestamp,
 			&updated); err != nil {
 			return nil, fmt.Errorf("%s", err)
 		}
 
 		objects = append(objects, models.ClientInfoModel{
-			ID:         id,
-			FirstName:  firstname,
-			LastName:   lastname,
-			Email:      email,
-			Phone:      phone,
-			LocationID: locationID,
-			Timestamp:  timestamp,
-			Updated:    updated,
+			ID:        id,
+			FirstName: firstname,
+			LastName:  lastname,
+			Email:     email,
+			Phone:     phone,
+			Timestamp: timestamp,
+			Updated:   updated,
 		})
 	}
 
@@ -107,8 +103,7 @@ func (c ClientInfoRepository) GetByID(id int) (interface{}, error) {
 				a.phone,
 				a.timestamp, 
 				a.updated,
-				( SELECT CASE WHEN ( a.client_ref <> null ) THEN a.client_ref ELSE 0 END),
-				a.location_id
+				( SELECT CASE WHEN ( a.client_ref <> null ) THEN a.client_ref ELSE 0 END)
 		FROM 	reservations_client_info a
 		WHERE a.id = $1`
 
@@ -126,7 +121,6 @@ func (c ClientInfoRepository) GetByID(id int) (interface{}, error) {
 		&object.Timestamp,
 		&object.Updated,
 		&object.ClientRef.ID,
-		&object.LocationID,
 	); err != nil {
 		return nil, fmt.Errorf("%s", err)
 	}
@@ -150,7 +144,6 @@ func (c ClientInfoRepository) Create() (interface{}, error) {
 		c.Model.Email,
 		c.Model.Phone,
 		c.Model.ClientRef.ID,
-		c.Model.LocationID,
 	).Scan(
 		&c.Model.ID,
 	); err != nil {
@@ -167,7 +160,7 @@ func (c ClientInfoRepository) Create() (interface{}, error) {
 // @return error - raise an error if so
 //
 func (c ClientInfoRepository) Update() (interface{}, error) {
-	var sqlStm = `SELECT update_client_info( $1, $2, $3, $4, $5, $6, $7 )`
+	var sqlStm = `SELECT update_client_info( $1, $2, $3, $4, $5, $6 )`
 
 	tx, err := c.DB.Begin()
 
@@ -192,7 +185,6 @@ func (c ClientInfoRepository) Update() (interface{}, error) {
 		c.Model.Email,
 		c.Model.Phone,
 		c.Model.ClientRef.ID,
-		c.Model.LocationID,
 	); err != nil {
 		return nil, fmt.Errorf("%s", err)
 	}
@@ -237,4 +229,44 @@ func (c ClientInfoRepository) Delete() (bool, error) {
 	}
 
 	return true, nil
+}
+
+//
+// GetByPhone returns an object by phone number
+// @params none
+// @return interface array
+// @return error - raise an error if so
+//
+func (c ClientInfoRepository) GetByPhone(phone string) (interface{}, error) {
+	var sqlStm = `
+		SELECT	a.id, 
+				a.first_name,
+				a.last_name,
+				a.email,
+				a.phone,
+				a.timestamp, 
+				a.updated,
+				( SELECT CASE WHEN ( a.client_ref <> null ) THEN a.client_ref ELSE 0 END)
+		FROM 	reservations_client_info a
+		WHERE 	a.phone = $1`
+
+	var object models.ClientInfoModel
+
+	if err := c.DB.QueryRow(
+		sqlStm,
+		phone,
+	).Scan(
+		&object.ID,
+		&object.FirstName,
+		&object.LastName,
+		&object.Email,
+		&object.Phone,
+		&object.Timestamp,
+		&object.Updated,
+		&object.ClientRef.ID,
+	); err != nil {
+		return nil, fmt.Errorf("%s", err)
+	}
+
+	return object, nil
 }
