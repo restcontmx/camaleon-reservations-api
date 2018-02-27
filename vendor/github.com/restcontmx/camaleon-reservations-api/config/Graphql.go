@@ -140,8 +140,15 @@ func GraphqlHandlerFunc(w http.ResponseWriter, r *http.Request) {
 	var buff []byte
 
 	w.WriteHeader(http.StatusOK)
+	enableCors(&w)
 
 	buff, _ = json.MarshalIndent(result, "", "\t")
 
 	w.Write(buff)
+}
+
+func enableCors(w *http.ResponseWriter) {
+	(*w).Header().Set("Access-Control-Allow-Origin", "*")
+	(*w).Header().Set("Access-Control-Allow-Methods", "POST")
+	(*w).Header().Set("Access-Control-Allow-Headers", "Accept, Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization")
 }
