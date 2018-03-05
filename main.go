@@ -21,7 +21,7 @@ func runServer() {
 
 	handler := cors.Default().Handler(graphqlHandler)
 	c := cors.New(cors.Options{
-		AllowedOrigins:   []string{"http://localhost:4200", "http://192.168.0.19:4123"},
+		AllowedOrigins:   []string{"http://localhost:4200", "http://localhost:4123", "https://camaleon-reservations.herokuapp.com"},
 		AllowCredentials: true,
 		AllowedMethods:   []string{"POST"},
 		AllowedHeaders:   []string{"authorization", "content-type"},
