@@ -76,6 +76,8 @@ func (a AreaRepository) GetAll() ([]interface{}, error) {
 			return nil, fmt.Errorf("%s", err)
 		}
 
+		tables, _ := a.GetTables(id)
+
 		objects = append(objects, models.AreaModel{
 			ID:        id,
 			Name:      name,
@@ -89,6 +91,7 @@ func (a AreaRepository) GetAll() ([]interface{}, error) {
 				CrCenterID:  locationCrCenterID,
 				BusinessID:  businessID,
 			},
+			Tables: tables,
 		})
 	}
 
@@ -168,6 +171,8 @@ func (a AreaRepository) GetAllByLocation(locationID int) ([]interface{}, error) 
 			return nil, fmt.Errorf("%s", err)
 		}
 
+		tables, _ := a.GetTables(id)
+
 		objects = append(objects, models.AreaModel{
 			ID:        id,
 			Name:      name,
@@ -181,6 +186,7 @@ func (a AreaRepository) GetAllByLocation(locationID int) ([]interface{}, error) 
 				CrCenterID:  locationCrCenterID,
 				BusinessID:  businessID,
 			},
+			Tables: tables,
 		})
 	}
 

@@ -38,6 +38,9 @@ var BusinessObject = graphql.NewObject(
 			"Description": &graphql.Field{
 				Type: graphql.String,
 			},
+			"Permalink": &graphql.Field{
+				Type: graphql.String,
+			},
 			"Locations": &graphql.Field{
 				Type: graphql.NewList(LocationObject),
 			},
@@ -69,6 +72,9 @@ var CreateUpdateBusiness = &graphql.Field{
 		"description": &graphql.ArgumentConfig{
 			Type: graphql.String,
 		},
+		"permalink": &graphql.ArgumentConfig{
+			Type: graphql.String,
+		},
 	},
 	Resolve: func(p graphql.ResolveParams) (interface{}, error) {
 		isOk, _ := ValidateAuthentication(p.Context.Value(authKey).(string))
@@ -88,12 +94,17 @@ var CreateUpdateBusiness = &graphql.Field{
 				if description, isOk := p.Args["description"].(string); isOk {
 					BusinessConfig.Repository.Model.Description = description
 				}
+				if permalink, isOk := p.Args["permalink"].(string); isOk {
+					BusinessConfig.Repository.Model.Permalink = permalink
+				}
 				return BusinessConfig.Repository.Update()
 			}
 			if description, isOk := p.Args["description"].(string); isOk {
 				BusinessConfig.Repository.Model.Description = description
 			}
-
+			if permalink, isOk := p.Args["permalink"].(string); isOk {
+				BusinessConfig.Repository.Model.Permalink = permalink
+			}
 			if crcenterid, isOk := p.Args["crcenter_id"].(int); isOk {
 				BusinessConfig.Repository.Model.CrCenterID = crcenterid
 			}

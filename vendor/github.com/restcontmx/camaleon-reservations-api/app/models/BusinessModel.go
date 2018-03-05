@@ -17,6 +17,7 @@ type BusinessModel struct {
 	CrCenterID  int
 	Name        string
 	Description string
+	Permalink   string
 	Locations   []LocationModel
 	Timestamp   time.Time
 	Updated     time.Time

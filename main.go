@@ -5,6 +5,8 @@ import (
 	"net/http"
 	"os"
 
+	"github.com/rs/cors"
+
 	_ "github.com/heroku/x/hmetrics/onload"
 	"github.com/restcontmx/camaleon-reservations-api/config"
 )
@@ -17,7 +19,15 @@ func runServer() {
 
 	graphqlHandler := http.HandlerFunc(config.GraphqlHandlerFunc)
 
-	http.Handle("/graphql", graphqlHandler)
+	handler := cors.Default().Handler(graphqlHandler)
+	c := cors.New(cors.Options{
+		AllowedOrigins:   []string{"http://localhost:4200", "http://192.168.0.19:4123"},
+		AllowCredentials: true,
+		AllowedMethods:   []string{"POST"},
+		AllowedHeaders:   []string{"authorization", "content-type"},
+	})
+	handler = c.Handler(handler)
+	http.Handle("/graphql", handler)
 
 	port := os.Getenv("PORT")
 

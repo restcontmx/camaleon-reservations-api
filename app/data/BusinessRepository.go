@@ -82,6 +82,7 @@ func (b BusinessRepository) GetByID(id int) (interface{}, error) {
 				a.crcenter_id,
 				a.name, 
 				a.description,
+				a.permalink,
 				a.timestamp, 
 				a.updated 
 		FROM reservations_business a
@@ -97,11 +98,14 @@ func (b BusinessRepository) GetByID(id int) (interface{}, error) {
 		&business.CrCenterID,
 		&business.Name,
 		&business.Description,
+		&business.Permalink,
 		&business.Timestamp,
 		&business.Updated,
 	); err != nil {
 		return nil, fmt.Errorf("%s", err)
 	}
+
+	business.Locations, _ = b.GetLocations(business.ID)
 
 	return business, nil
 }
@@ -117,6 +121,7 @@ func (b BusinessRepository) GetByCrCenterID(crcenterid int) (interface{}, error)
 				a.crcenter_id,
 				a.name, 
 				a.description,
+				a.permalink,
 				a.timestamp, 
 				a.updated 
 		FROM reservations_business a
@@ -132,6 +137,7 @@ func (b BusinessRepository) GetByCrCenterID(crcenterid int) (interface{}, error)
 		&business.CrCenterID,
 		&business.Name,
 		&business.Description,
+		&business.Permalink,
 		&business.Timestamp,
 		&business.Updated,
 	); err != nil {
@@ -147,7 +153,7 @@ func (b BusinessRepository) GetByCrCenterID(crcenterid int) (interface{}, error)
 // @returns interface - a business
 //
 func (b BusinessRepository) Create() (interface{}, error) {
-	var sqlStm = `SELECT create_business( $1, $2, $3 )`
+	var sqlStm = `SELECT create_business( $1, $2, $3, $4 )`
 
 	tx, err := b.DB.Begin()
 
@@ -173,6 +179,7 @@ func (b BusinessRepository) Create() (interface{}, error) {
 		b.Model.CrCenterID,
 		b.Model.Name,
 		b.Model.Description,
+		b.Model.Permalink,
 	); err != nil {
 		return nil, fmt.Errorf("%s", err)
 	}
@@ -190,7 +197,7 @@ func (b BusinessRepository) Create() (interface{}, error) {
 // @returns interface - a business
 //
 func (b BusinessRepository) Update() (interface{}, error) {
-	var sqlStm = `SELECT update_business( $1, $2, $3, $4 )`
+	var sqlStm = `SELECT update_business( $1, $2, $3, $4, $5 )`
 
 	tx, err := b.DB.Begin()
 
@@ -213,6 +220,7 @@ func (b BusinessRepository) Update() (interface{}, error) {
 		b.Model.CrCenterID,
 		b.Model.Name,
 		b.Model.Description,
+		b.Model.Permalink,
 	); err != nil {
 		return nil, fmt.Errorf("%s", err)
 	}
@@ -257,4 +265,87 @@ func (b BusinessRepository) Delete() (bool, error) {
 	}
 
 	return true, nil
+}
+
+//
+// GetLocations will return all the locations by business id
+// @param businessID : int - business id
+// @returns none
+//
+func (b BusinessRepository) GetLocations(businessID int) ([]models.LocationModel, error) {
+	var sqlStm = `SELECT	id, 
+							business_id, 
+							crcenter_id,
+							name,
+							description, 
+							address1,
+							address2,
+							phone,
+							city,
+							state,
+							country,
+							timestamp, 
+							updated 
+					FROM reservations_location
+					WHERE business_id = $1`
+
+	var locations []models.LocationModel
+
+	rows, err := b.DB.Query(sqlStm, businessID)
+
+	if err != nil {
+		return nil, fmt.Errorf("%s", err)
+	}
+
+	defer rows.Close()
+
+	for rows.Next() {
+		var id int
+		var businessid int
+		var crcenterid int
+		var name string
+		var description string
+		var address1 string
+		var address2 string
+		var phone string
+		var city string
+		var state string
+		var country string
+		var timestamp time.Time
+		var updated time.Time
+
+		if err = rows.Scan(
+			&id,
+			&businessid,
+			&crcenterid,
+			&name,
+			&description,
+			&address1,
+			&address2,
+			&phone,
+			&city,
+			&state,
+			&country,
+			&timestamp,
+			&updated); err != nil {
+			return nil, fmt.Errorf("%s", err)
+		}
+
+		locations = append(locations, models.LocationModel{
+			ID:          id,
+			CrCenterID:  crcenterid,
+			Name:        name,
+			Description: description,
+			Address1:    address1,
+			Address2:    address2,
+			Timestamp:   timestamp,
+			Updated:     updated,
+		})
+	}
+
+	if err = rows.Err(); err != nil {
+		return nil, fmt.Errorf("%s", err)
+	}
+
+	return locations, nil
 }

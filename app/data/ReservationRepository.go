@@ -49,7 +49,8 @@ func (r ReservationRepository) GetAll() ([]interface{}, error) {
 						area.description,
 						area.img_url,
 						a.location_id,
-						e.name
+						e.name,
+						e.business_id
 				FROM 			reservations_reservation a
 					INNER JOIN 	reservations_client_info b ON a.client_info_id = b.id
 					INNER JOIN 	reservations_reservation_status c ON a.status = c.id
@@ -103,7 +104,8 @@ func (r ReservationRepository) GetAll() ([]interface{}, error) {
 			&reservation.Table.Area.Description,
 			&reservation.Table.Area.ImgURL,
 			&reservation.Location.ID,
-			&reservation.Location.Name); err != nil {
+			&reservation.Location.Name,
+			&reservation.Location.BusinessID); err != nil {
 			return nil, fmt.Errorf("%s", err)
 		}
 
@@ -155,7 +157,8 @@ func (r ReservationRepository) GetByID(id int) (interface{}, error) {
 						area.description,
 						area.img_url,
 						a.location_id,
-						e.name
+						e.name,
+						e.business_id
 				FROM 			reservations_reservation a
 					INNER JOIN 	reservations_client_info b ON a.client_info_id = b.id
 					INNER JOIN 	reservations_reservation_status c ON a.status = c.id
@@ -203,6 +206,7 @@ func (r ReservationRepository) GetByID(id int) (interface{}, error) {
 		&reservation.Table.Area.ImgURL,
 		&reservation.Location.ID,
 		&reservation.Location.Name,
+		&reservation.Location.BusinessID,
 	); err != nil {
 		return nil, fmt.Errorf("%s", err)
 	}
@@ -351,7 +355,8 @@ func (r ReservationRepository) GetByDates(location int, statusID int, startDate 
 						area.description,
 						area.img_url,
 						a.location_id,
-						e.name
+						e.name,
+						e.business_id
 				FROM 			reservations_reservation a
 					INNER JOIN 	reservations_client_info b ON a.client_info_id = b.id
 					INNER JOIN 	reservations_reservation_status c ON a.status = c.id
@@ -410,7 +415,8 @@ func (r ReservationRepository) GetByDates(location int, statusID int, startDate 
 			&reservation.Table.Area.Description,
 			&reservation.Table.Area.ImgURL,
 			&reservation.Location.ID,
-			&reservation.Location.Name); err != nil {
+			&reservation.Location.Name,
+			&reservation.Location.BusinessID); err != nil {
 			return nil, fmt.Errorf("%s", err)
 		}
 

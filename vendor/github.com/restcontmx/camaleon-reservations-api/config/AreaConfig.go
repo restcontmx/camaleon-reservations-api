@@ -124,7 +124,6 @@ var CreateUpdateArea = &graphql.Field{
 				return nil, fmt.Errorf("You must provide a Location ")
 			}
 			return nil, fmt.Errorf("You must provide a Name ")
-
 		}
 		return nil, fmt.Errorf("Invalid Credentials")
 	},

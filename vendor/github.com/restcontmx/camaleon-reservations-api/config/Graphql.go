@@ -36,6 +36,8 @@ var MutationQueryType = graphql.NewObject(graphql.ObjectConfig{
 	Name: "Mutation",
 	Fields: graphql.Fields{
 		"user":              CreateUpdateUser,
+		"userReservation":   CreateUpdateUserReservation,
+		"rol":               CreateUpdateRol,
 		"deleteUser":        DeleteUser,
 		"business":          CreateUpdateBusiness,
 		"deleteBusiness":    DeleteBusiness,
@@ -60,6 +62,12 @@ var QueryType = graphql.NewObject(
 		Fields: graphql.Fields{
 			"user":  RetrieveUser,
 			"users": GetAllUsers,
+
+			"userReservation":  RetrieveUserReservation,
+			"userReservations": GetAllUserReservations,
+
+			"rol":  RetrieveRol,
+			"rols": GetAllRol,
 
 			"business":   RetrieveBusiness,
 			"businesses": GetAllBusinesses,
@@ -101,6 +109,8 @@ func InitRepositories() {
 	tableRepo := &data.TableRepository{DB: db}
 	clientInfoRepo := &data.ClientInfoRepository{DB: db}
 	reservationRepo := &data.ReservationRepository{DB: db}
+	rolRepo := &data.RolRepository{DB: db}
+	userReservationRepo := &data.UserReservationRepository{DB: db}
 
 	UserConfig = UserConfiguration{Repository: userRepo}
 	BusinessConfig = BusinessConfiguration{Repository: businessRepo}
@@ -110,6 +120,8 @@ func InitRepositories() {
 	TableConfig = TableConfiguration{Repository: tableRepo}
 	ClientInfoConfig = ClientInfoConfiguration{Repository: clientInfoRepo}
 	ReservationConfig = ReservationConfiguration{Repository: reservationRepo}
+	RolConfig = RolConfiguration{Repository: rolRepo}
+	UserReservationConfig = UserReservationConfiguration{Repository: userReservationRepo}
 }
 
 //
@@ -120,6 +132,7 @@ func InitRepositories() {
 // @returns none
 //
 func GraphqlHandlerFunc(w http.ResponseWriter, r *http.Request) {
+
 	// get query
 	opts := handler.NewRequestOptions(r)
 	basicToken := r.Header.Get("Authorization")
@@ -140,15 +153,8 @@ func GraphqlHandlerFunc(w http.ResponseWriter, r *http.Request) {
 	var buff []byte
 
 	w.WriteHeader(http.StatusOK)
-	enableCors(&w)
 
 	buff, _ = json.MarshalIndent(result, "", "\t")
 
 	w.Write(buff)
-}
-
-func enableCors(w *http.ResponseWriter) {
-	(*w).Header().Set("Access-Control-Allow-Origin", "*")
-	(*w).Header().Set("Access-Control-Allow-Methods", "POST")
-	(*w).Header().Set("Access-Control-Allow-Headers", "Accept, Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization")
 }

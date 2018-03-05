@@ -135,7 +135,7 @@ func (c ClientInfoRepository) GetByID(id int) (interface{}, error) {
 // @return error - raise an error if so
 //
 func (c ClientInfoRepository) Create() (interface{}, error) {
-	var sqlStm = `SELECT create_client_info( $1, $2, $3, $4, $5, $6 )`
+	var sqlStm = `SELECT create_client_info( $1, $2, $3, $4, $5 )`
 
 	if err := c.DB.QueryRow(
 		sqlStm,

@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/restcontmx/camaleon-reservations-api/app/helpers"
+
 	"github.com/restcontmx/camaleon-reservations-api/app/data"
 	"github.com/restcontmx/camaleon-reservations-api/app/models"
 
@@ -190,8 +192,17 @@ var CreateUpdateReservation = &graphql.Field{
 									if t, err := time.Parse(layout, date); err == nil {
 										ReservationConfig.Repository.Model.Date = t
 										if clientInfoID, isOk := p.Args["client_info_id"].(int); isOk {
+
 											ReservationConfig.Repository.Model.ClientInfo.ID = clientInfoID
-											return ReservationConfig.Repository.Create()
+											reservation, err := ReservationConfig.Repository.Create()
+
+											if err != nil {
+												return nil, err
+											}
+
+											_, _ = helpers.SendConfirmationEmail(reservation.(models.ReservationModel))
+
+											return reservation, nil
 										}
 										return nil, fmt.Errorf("You must provide a Client Info ID ")
 									}
