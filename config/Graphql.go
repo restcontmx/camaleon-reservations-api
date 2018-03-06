@@ -86,6 +86,8 @@ var QueryType = graphql.NewObject(
 
 			"reservation":  RetrieveReservation,
 			"reservations": GetAllReservations,
+
+			"login": Login,
 		},
 	},
 )

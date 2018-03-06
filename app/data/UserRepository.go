@@ -28,7 +28,7 @@ type UserRepository struct {
 // @return error - raise an error if so
 //
 func (u UserRepository) GetAll() ([]interface{}, error) {
-	
+
 	var sqlStm = "SELECT id, firstname, lastname, username, email, password, timestamp, updated FROM reservations_user"
 	var users []models.UserModel
 
@@ -88,13 +88,13 @@ func (u UserRepository) GetByID(id int) (interface{}, error) {
 
 	var sqlStm = `
 		SELECT	a.id, 
-			a.firstname, 
-			a.lastname, 
-			a.username, 
-			a.email, 
-			a.password, 
-			a.timestamp, 
-			a.updated 
+				a.firstname, 
+				a.lastname, 
+				a.username, 
+				a.email, 
+				a.password, 
+				a.timestamp, 
+				a.updated 
 		FROM reservations_user a
 		WHERE a.id = $1`
 
