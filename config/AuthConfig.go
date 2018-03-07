@@ -3,12 +3,14 @@ package config
 import (
 	"fmt"
 
+	"github.com/restcontmx/camaleon-reservations-api/app/models"
+
 	"github.com/graphql-go/graphql"
 )
 
 // Login function for authentication
 var Login = &graphql.Field{
-	Type: UserObject,
+	Type: UserReservationObject,
 	Args: graphql.FieldConfigArgument{
 		"username": &graphql.ArgumentConfig{
 			Type: graphql.String,
@@ -22,7 +24,12 @@ var Login = &graphql.Field{
 			if password, isOk := p.Args["password"].(string); isOk {
 				UserConfig.Repository.Model.UserName = username
 				UserConfig.Repository.Model.Password = password
-				return UserConfig.Repository.AuthenticateUser()
+				user, err := UserConfig.Repository.AuthenticateUser()
+				if err != nil {
+					return nil, err
+				}
+				userP := user.(models.UserModel)
+				return UserReservationConfig.Repository.GetByUserID(userP.ID)
 			}
 			return nil, fmt.Errorf("Missing 'password' field")
 		}

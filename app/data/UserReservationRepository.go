@@ -398,3 +398,71 @@ func (u UserReservationRepository) Delete() (bool, error) {
 
 	return true, nil
 }
+
+//
+// GetByUserID get object by user id
+//
+func (u UserReservationRepository) GetByUserID(userID int) (interface{}, error) {
+	var sqlStm = `
+			SELECT 	a.id, 
+					a.business_id,
+					b.crcenter_id,
+					b.name,
+					b.description,
+					b.permalink,
+
+					a.user_id,
+					u.firstname,
+					u.lastname,
+					u.username,
+					u.email,
+
+					a.rol_id,
+					r.description,
+					r.value,
+
+					a.timestamp, 
+					a.updated
+			FROM reservations_userreservation a
+				INNER JOIN reservations_business b
+					ON b.id = a.business_id
+				INNER JOIN reservations_user u
+					ON u.id = a.user_id
+				INNER JOIN reservations_rol r 
+					ON r.id = a.rol_id
+			WHERE a.user_id = $1`
+
+	var user models.UserReservationModel
+
+	if err := u.DB.QueryRow(
+		sqlStm,
+		userID,
+	).Scan(
+		&user.ID,
+
+		&user.Business.ID,
+		&user.Business.CrCenterID,
+		&user.Business.Name,
+		&user.Business.Description,
+		&user.Business.Permalink,
+
+		&user.User.ID,
+		&user.User.FirstName,
+		&user.User.LastName,
+		&user.User.UserName,
+		&user.User.Email,
+
+		&user.Rol.ID,
+		&user.Rol.Description,
+		&user.Rol.Value,
+
+		&user.Timestamp,
+		&user.Updated,
+	); err != nil {
+		return nil, fmt.Errorf("%s", err)
+	}
+
+	user.AllowedLocations, _ = u.GetAllowedLocations(user.ID)
+
+	return user, nil
+}

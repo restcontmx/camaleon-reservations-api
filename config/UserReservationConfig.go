@@ -150,6 +150,9 @@ var RetrieveUserReservation = &graphql.Field{
 		"id": &graphql.ArgumentConfig{
 			Type: graphql.Int,
 		},
+		"user_id": &graphql.ArgumentConfig{
+			Type: graphql.Int,
+		},
 	},
 	Resolve: func(p graphql.ResolveParams) (interface{}, error) {
 		isOk, _ := ValidateAuthentication(p.Context.Value(authKey).(string))
@@ -157,7 +160,10 @@ var RetrieveUserReservation = &graphql.Field{
 			if id, isOk := p.Args["id"].(int); isOk {
 				return UserReservationConfig.Repository.GetByID(id)
 			}
-			return nil, fmt.Errorf("There is no id field")
+			if userID, isOk := p.Args["user_id"].(int); isOk {
+				return UserReservationConfig.Repository.GetByUserID(userID)
+			}
+			return nil, fmt.Errorf("There is no id or user id field")
 		}
 		return nil, fmt.Errorf("Invalid Credentials")
 	},

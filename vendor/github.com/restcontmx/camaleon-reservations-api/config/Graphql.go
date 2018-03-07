@@ -45,6 +45,7 @@ var MutationQueryType = graphql.NewObject(graphql.ObjectConfig{
 		"deleteLocation":    DeleteLocation,
 		"area":              CreateUpdateArea,
 		"reservationStatus": CreateUpdateReservationStatus,
+		"waitListStatus":    CreateUpdateWaitListStatus,
 		"table":             CreateUpdateTable,
 		"clientInfo":        CreateUpdateClientInfo,
 		"reservation":       CreateUpdateReservation,
@@ -80,6 +81,7 @@ var QueryType = graphql.NewObject(
 
 			"reservationStatuses": GetAllReservationStatus,
 			"tables":              GetAllTables,
+			"waitListStatuses":    GetAllWaitListStatus,
 
 			"clientInfo":  RetrieveClientInfo,
 			"clientInfos": GetAllClientInfo,
@@ -87,7 +89,7 @@ var QueryType = graphql.NewObject(
 			"reservation":  RetrieveReservation,
 			"reservations": GetAllReservations,
 
-			"login": Login,
+			"loginReservation": Login,
 		},
 	},
 )
@@ -113,6 +115,8 @@ func InitRepositories() {
 	reservationRepo := &data.ReservationRepository{DB: db}
 	rolRepo := &data.RolRepository{DB: db}
 	userReservationRepo := &data.UserReservationRepository{DB: db}
+	waitListStatusRepo := &data.WaitListStatusRepository{DB: db}
+	waitListRepo := &data.WaitListRepository{DB: db}
 
 	UserConfig = UserConfiguration{Repository: userRepo}
 	BusinessConfig = BusinessConfiguration{Repository: businessRepo}
@@ -124,6 +128,8 @@ func InitRepositories() {
 	ReservationConfig = ReservationConfiguration{Repository: reservationRepo}
 	RolConfig = RolConfiguration{Repository: rolRepo}
 	UserReservationConfig = UserReservationConfiguration{Repository: userReservationRepo}
+	WaitListStatusConfig = WaitListStatusConfiguration{Repository: waitListStatusRepo}
+	WaitListConfig = WaitListConfiguration{Repository: waitListRepo}
 }
 
 //
