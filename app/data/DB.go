@@ -18,8 +18,6 @@ var ConnObj = ConnectionObject{}
 // ConnStr will contain the connection string
 var ConnStr = os.Getenv("DATABASE_URL")
 
-// var ConnStr = "postgres://jdrpybcnbztezu:19bdffd60d278b00bb5e1cced37636de1ec50274415f63418cc1011aa34bd6c1@ec2-54-227-251-233.compute-1.amazonaws.com:5432/d54lb0tevtmv9k?sslmode=require"
-
 //
 // Repository is the general contract for all the repositories
 // GetByID - for getting a model by id
