@@ -49,6 +49,7 @@ var MutationQueryType = graphql.NewObject(graphql.ObjectConfig{
 		"table":             CreateUpdateTable,
 		"clientInfo":        CreateUpdateClientInfo,
 		"reservation":       CreateUpdateReservation,
+		"waitList":          CreateUpdateWaitList,
 	},
 })
 
@@ -88,6 +89,9 @@ var QueryType = graphql.NewObject(
 
 			"reservation":  RetrieveReservation,
 			"reservations": GetAllReservations,
+
+			"waitList":  RetrieveWaitList,
+			"waitLists": GetAllWaitLists,
 
 			"loginReservation": Login,
 		},

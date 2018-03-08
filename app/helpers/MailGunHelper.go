@@ -40,3 +40,26 @@ func SendConfirmationEmail(reservation models.ReservationModel) (bool, error) {
 
 	return true, nil
 }
+
+// SendConfirmationEmailWaitList will send a confirmation email
+func SendConfirmationEmailWaitList(waitlist models.WaitListModel) (bool, error) {
+	var message = `
+		<h2>Thanks for waiting with Camaleon Wait List</h2>` +
+		`<p>Client Name : ` + waitlist.ClientInfo.FirstName + ` ` + waitlist.ClientInfo.LastName + `</p>` +
+		`<p>Phone Number : ` + waitlist.ClientInfo.Phone + `</p>` +
+		`<p>Date : ` + waitlist.Timestamp.Format("01/02/2006 15:04:05") + `</p>`
+
+	_, err := http.PostForm("https://api:"+MailGunAPIKey+"@"+MailGunURL, url.Values{
+		"html":    {message},
+		"to":      {waitlist.ClientInfo.Email},
+		"subject": {"Camaleon Reservations"},
+		"from":    {CamaleonEmail},
+	})
+
+	if err != nil {
+		return false, fmt.Errorf("%s", err)
+	}
+
+	return true, nil
+
+}

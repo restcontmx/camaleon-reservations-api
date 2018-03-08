@@ -31,6 +31,7 @@ func runServer() {
 
 	port := os.Getenv("PORT")
 
+	log.Println(os.Getenv("DATABASE_URL"))
 	if port == "" {
 		log.Fatal("$PORT must be set")
 	}
