@@ -4,6 +4,8 @@ import (
 	"database/sql"
 	"log"
 	"os"
+
+	_ "github.com/lib/pq" // this is for posgtgresql driver
 )
 
 // ConnectionObject is the main connection object

@@ -5,8 +5,6 @@ import (
 	"fmt"
 	"time"
 
-	_ "github.com/lib/pq"
-
 	"github.com/restcontmx/camaleon-reservations-api/app/models"
 	"golang.org/x/crypto/bcrypt"
 )
