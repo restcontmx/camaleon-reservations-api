@@ -134,20 +134,20 @@
 		{
 			"checksumSHA1": "28E1Mv+Uwg1hBArJ/6Ho14x/t8s=",
 			"path": "github.com/restcontmx/camaleon-reservations-api/app/data",
-			"revision": "91a71f62334369d37a825182012571055939c276",
-			"revisionTime": "2018-03-09T00:38:54Z"
+			"revision": "d4816603c83fada31a3b484e9d4612aa0d6bf3be",
+			"revisionTime": "2018-03-09T03:35:26Z"
 		},
 		{
 			"checksumSHA1": "A0ljR5OxHOQAv3oFFoW4svIh8BY=",
 			"path": "github.com/restcontmx/camaleon-reservations-api/app/models",
-			"revision": "91a71f62334369d37a825182012571055939c276",
-			"revisionTime": "2018-03-09T00:38:54Z"
+			"revision": "d4816603c83fada31a3b484e9d4612aa0d6bf3be",
+			"revisionTime": "2018-03-09T03:35:26Z"
 		},
 		{
 			"checksumSHA1": "YgPUP0d40mpewajLAZaREyONIMw=",
 			"path": "github.com/restcontmx/camaleon-reservations-api/config",
-			"revision": "91a71f62334369d37a825182012571055939c276",
-			"revisionTime": "2018-03-09T00:38:54Z"
+			"revision": "d4816603c83fada31a3b484e9d4612aa0d6bf3be",
+			"revisionTime": "2018-03-09T03:35:26Z"
 		},
 		{
 			"checksumSHA1": "yLIkEnJqSkaCQCvPrHEhYxOFtXs=",
