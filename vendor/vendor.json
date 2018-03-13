@@ -134,20 +134,20 @@
 		{
 			"checksumSHA1": "28E1Mv+Uwg1hBArJ/6Ho14x/t8s=",
 			"path": "github.com/restcontmx/camaleon-reservations-api/app/data",
-			"revision": "d4816603c83fada31a3b484e9d4612aa0d6bf3be",
-			"revisionTime": "2018-03-09T03:35:26Z"
+			"revision": "9a1c0b2cd315a520d0e981bad1993eed540273b3",
+			"revisionTime": "2018-03-09T09:28:54Z"
 		},
 		{
 			"checksumSHA1": "A0ljR5OxHOQAv3oFFoW4svIh8BY=",
 			"path": "github.com/restcontmx/camaleon-reservations-api/app/models",
-			"revision": "d4816603c83fada31a3b484e9d4612aa0d6bf3be",
-			"revisionTime": "2018-03-09T03:35:26Z"
+			"revision": "9a1c0b2cd315a520d0e981bad1993eed540273b3",
+			"revisionTime": "2018-03-09T09:28:54Z"
 		},
 		{
-			"checksumSHA1": "YgPUP0d40mpewajLAZaREyONIMw=",
+			"checksumSHA1": "DEBc/hsQHq58Ivhxhx3hNWIlj48=",
 			"path": "github.com/restcontmx/camaleon-reservations-api/config",
-			"revision": "d4816603c83fada31a3b484e9d4612aa0d6bf3be",
-			"revisionTime": "2018-03-09T03:35:26Z"
+			"revision": "9a1c0b2cd315a520d0e981bad1993eed540273b3",
+			"revisionTime": "2018-03-09T09:28:54Z"
 		},
 		{
 			"checksumSHA1": "yLIkEnJqSkaCQCvPrHEhYxOFtXs=",

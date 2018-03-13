@@ -201,6 +201,7 @@ var CreateUpdateReservation = &graphql.Field{
 											}
 
 											_, _ = helpers.SendConfirmationEmail(reservation.(models.ReservationModel))
+											helpers.SendReservationNotification(reservation.(models.ReservationModel))
 
 											return reservation, nil
 										}
